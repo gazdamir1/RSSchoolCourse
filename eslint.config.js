@@ -1,58 +1,36 @@
-import { FlatCompat } from "@eslint/eslintrc"
 import globals from "globals"
-import js from "@eslint/js"
-import ts from "@typescript-eslint/eslint-plugin"
-import tsParser from "@typescript-eslint/parser"
-import react from "eslint-plugin-react"
-import reactHooks from "eslint-plugin-react-hooks"
-import jsxA11y from "eslint-plugin-jsx-a11y"
-import importPlugin from "eslint-plugin-import"
-import prettier from "eslint-plugin-prettier"
+import pluginJs from "@eslint/js"
+import tseslint from "typescript-eslint"
+import reactRefresh from "eslint-plugin-react-refresh"
+import reactCompiler from "eslint-plugin-react-compiler"
 
-const compat = new FlatCompat()
-
-export default [
-  {
-    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
-    ignores: ["dist"],
-  },
-  {
-    languageOptions: {
-      ecmaVersion: 2020,
-      sourceType: "module",
-      parser: tsParser,
-      parserOptions: {
-        ecmaFeatures: { jsx: true },
-      },
-    },
-    globals: { ...globals.browser, ...globals.node },
-  },
-  ...compat.extends(
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:jsx-a11y/recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
-    "prettier",
-    "plugin:prettier/recommended"
-  ),
+export default tseslint.config(
+  pluginJs.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     plugins: {
-      react,
-      "react-refresh": "eslint-plugin-react-refresh",
-      "jsx-a11y": jsxA11y,
-      import: importPlugin,
-      prettier: prettier,
+      "react-refresh": reactRefresh,
+      "react-compiler": reactCompiler,
     },
+    ignores: ["**/node_modules/", ".git/"],
+  },
+  { files: ["**/*.{ts,tsx}"] },
+  { languageOptions: { parserOptions: { ecmaFeatures: { jsx: true } } } },
+  {
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
+      parserOptions: ["tsconfig.json", "tsconfig.app.json"],
+    },
+  },
+  {
     rules: {
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
       ],
-      "prettier/prettier": "error",
+      "@typescript-eslint/no-explicit-any": "error",
+      "react-compiler/react-compiler": "error",
+      "react/react-in-jsx-scope": "off",
     },
-  },
-]
+  }
+)

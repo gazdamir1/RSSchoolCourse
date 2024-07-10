@@ -1,59 +1,76 @@
-import { Component } from 'react';
-import SearchBar from './components/SearchBar';
-import Results from './components/Results';
-import ErrorBoundary from './components/ErrorBoundary';
-import { SearchResult } from './types';
-import ErrorButton from './components/ErrorButton';
+import { Component } from "react";
+import SearchBar from "./components/SearchBar";
+import Results from "./components/Results/Results";
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import { SearchResult } from "./types";
+import Loader from "./components/Loader/Loader";
+import "./App.css";
 
 interface AppState {
   searchTerm: string;
   results: SearchResult[];
-  error: Error | null;
+  error: string | null;
+  loading: boolean;
 }
 
-class App extends Component<{}, AppState> {
+interface AppProps {}
+
+class App extends Component<AppProps, AppState> {
   state: AppState = {
-    searchTerm: localStorage.getItem('searchTerm') || '',
+    searchTerm: localStorage.getItem("searchTerm") || "",
     results: [],
     error: null,
+    loading: false,
   };
 
   componentDidMount() {
     this.fetchResults(this.state.searchTerm);
   }
 
-  fetchResults = (searchTerm: string) => {
+  fetchResults = async (searchTerm: string) => {
     const trimmedTerm = searchTerm.trim();
+    this.setState({ loading: true, error: null });
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const apiEndpoint = `https://rickandmortyapi.com/api/character/?name=${trimmedTerm}`;
 
-    fetch(apiEndpoint)
-      .then((response) => response.json())
-      .then((data) => this.setState({ results: data.results as SearchResult[] }))
-      .catch((error) => {
-        this.setState({ error: error });
-        throw error;
+    try {
+      const response = await fetch(apiEndpoint);
+      const data = await response.json();
+      this.setState({
+        results: data.results as SearchResult[],
+        loading: false,
       });
+    } catch (error) {
+      this.setState({ error: "Failed to fetch", loading: false });
+      this.throwError;
+    }
   };
 
   handleSearch = (searchTerm: string) => {
     this.setState({ searchTerm });
-    localStorage.setItem('searchTerm', searchTerm);
+    localStorage.setItem("searchTerm", searchTerm);
     this.fetchResults(searchTerm);
   };
 
-  render() {
-    const { searchTerm, results, error } = this.state;
+  throwError = () => {
+    this.fetchResults("Morti");
+  };
 
-    if (error) {
-      throw error;
-    }
+  render() {
+    const { searchTerm, results, error, loading } = this.state;
 
     return (
       <ErrorBoundary>
         <div className="app">
-          <SearchBar searchTerm={searchTerm} onSearch={this.handleSearch} />
-          <ErrorButton />
-          <Results items={results} />
+          <div className="searchSection">
+            <SearchBar searchTerm={searchTerm} onSearch={this.handleSearch} />
+            <button onClick={this.throwError}>Throw Error</button>
+          </div>
+
+          <div className="resultsSection">
+            {loading ? <Loader /> : <Results items={results} />}
+            {error && <div>Error: {error}</div>}
+          </div>
         </div>
       </ErrorBoundary>
     );

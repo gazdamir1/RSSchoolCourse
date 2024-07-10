@@ -1,0 +1,17 @@
+.results{
+    display:    flex;
+    flex-wrap: wrap;
+    gap: 2vw;
+    justify-content: center;
+    
+}
+
+.fullCard{
+    background-color: rgb(109, 201, 78);
+    padding: 10px;
+}
+
+.resultImage{
+    width: 20vw;
+
+}

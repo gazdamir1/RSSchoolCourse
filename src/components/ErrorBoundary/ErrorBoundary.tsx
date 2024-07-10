@@ -1,4 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from "react";
+import "./ErrorBoundary.css";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -28,14 +29,14 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          (
-          <div style={{ color: "red", marginLeft: "10px" }}>
-            Error occurred, see console for more details.
+        <div className="box">
+          <div className="errorTitle">
+            Error occurred, see console for more details.{" "}
             {this.state.errorMessage}
-            <button onClick={this.clearLocalStorage}>Clear</button>
           </div>
-          )
+          <button onClick={this.clearLocalStorage} className="errorButton">
+            Clear
+          </button>
         </div>
       );
     }
