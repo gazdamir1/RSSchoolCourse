@@ -1,0 +1,23 @@
+.app{
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+}
+
+.searchSection{
+  background-color:rgb(109, 201, 78);
+  display: flex;
+  justify-content: space-between;
+  padding-inline: 100px;
+  padding-block: 10px;
+}
+
+.resultsSection{
+  align-items: center;
+  display: flex;
+  padding-block: 20px;
+  justify-content: space-between;
+  padding-inline: 100px;
+}
+
