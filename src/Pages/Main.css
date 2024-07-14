@@ -1,0 +1,39 @@
+.main{
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  .searchSection{
+    background-color:rgb(109, 201, 78);
+    display: flex;
+    justify-content: center;
+    padding-inline: 100px;
+    padding-block: 10px;
+    gap:  2vw;
+  }
+  
+  .resultsSection{
+    align-items: center;
+    display: flex;
+    padding-block: 20px;
+    justify-content: space-between;
+    padding-inline: 50px;
+    flex-direction: column;
+    gap: 10px;
+    flex: 2;
+  }
+  
+  .contentArea{
+    display: flex;
+  }
+
+  .detailsArea{
+    display: flex;
+    flex: 0.5;
+    margin-top: 20px;
+    padding-left: 30px;
+    border-radius: 8px;
+    background-color: var(--bg-component-color);
+  }
