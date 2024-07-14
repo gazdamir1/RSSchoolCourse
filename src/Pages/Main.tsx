@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import useSearchQuery from "../hooks/useSearchQuery"
 import { SearchResult } from "../types"
-import ErrorBoundary from "../components/ErrorBoundary/ErrorBoundary"
 import SearchBar from "../components/SearchBar/SearchBar"
 import Loader from "../components/Loader/Loader"
 import Results from "../components/Results/Results"
@@ -67,42 +66,40 @@ const Main = () => {
   }
 
   return (
-    <ErrorBoundary>
-      <div className="main">
-        <div className="searchSection">
-          <SearchBar searchTerm={searchTerm} onSearch={handleSearch} />
-          <button onClick={throwError}>Throw Error</button>
-        </div>
+    <div className="main">
+      <div className="searchSection">
+        <SearchBar searchTerm={searchTerm} onSearch={handleSearch} />
+        <button onClick={throwError}>Throw Error</button>
+      </div>
 
-        <div className="contentArea">
-          <div
-            className="resultsSection"
-            onClick={detailsId ? handleCloseDetails : () => {}}
-          >
-            {loading ? (
-              <Loader />
-            ) : (
-              <Results items={results} onItemClick={handleItemClick} />
-            )}
-            {error && <div>Error: {error}</div>}
-            {!loading && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={onPageChange}
-              />
-            )}
-          </div>
-          {detailsId ? (
-            <div className="detailsArea">
-              <Outlet />
-            </div>
+      <div className="contentArea">
+        <div
+          className="resultsSection"
+          onClick={detailsId ? handleCloseDetails : () => {}}
+        >
+          {loading ? (
+            <Loader />
           ) : (
-            <></>
+            <Results items={results} onItemClick={handleItemClick} />
+          )}
+          {error && <div>Error: {error}</div>}
+          {!loading && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={onPageChange}
+            />
           )}
         </div>
+        {detailsId ? (
+          <div className="detailsArea">
+            <Outlet />
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
-    </ErrorBoundary>
+    </div>
   )
 }
 

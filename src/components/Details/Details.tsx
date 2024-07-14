@@ -44,7 +44,11 @@ const Details: React.FC = () => {
     <>
       {details ? (
         <div className="details">
-          <button className="closeDetails" onClick={handleCloseDetails}>
+          <button
+            title="CloseBut"
+            className="closeDetails"
+            onClick={handleCloseDetails}
+          >
             Close Details
           </button>
           <div className="detailsTitle">{details.name}</div>
