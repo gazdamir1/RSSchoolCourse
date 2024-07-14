@@ -9,9 +9,22 @@
 .fullCard{
     background-color: rgb(109, 201, 78);
     padding: 10px;
+    border-radius: 8px;
+    width: 200px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    align-items: center;
 }
 
 .resultImage{
-    width: 20vw;
+    width: 10vw;
+}
 
+.charName{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 56px;
 }

@@ -1,15 +1,13 @@
-import { Component } from "react";
-import "./Loader.css";
-import loader from "../../assets/loader.svg";
+import React from "react"
+import "./Loader.css"
+import loader from "../../assets/loader.svg"
 
-export class Loader extends Component {
-  render() {
-    return (
-      <div className="loaderWrapper">
-        <img src={loader} className="loader"></img>
-      </div>
-    );
-  }
+const Loader: React.FC = () => {
+  return (
+    <div className="loaderWrapper">
+      <img src={loader} className="loader" alt="Loading..." />
+    </div>
+  )
 }
 
-export default Loader;
+export default Loader

@@ -11,6 +11,10 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  overflow-x: hidden;
+
+  --bg-component-color: rgb(109, 201, 78);
 }
 
 a {
@@ -24,9 +28,8 @@ a:hover {
 
 body {
   margin: 0;
+  padding: 0;
   display: flex;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {

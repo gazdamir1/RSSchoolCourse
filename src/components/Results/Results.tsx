@@ -1,27 +1,27 @@
-import { Component } from "react";
-import { SearchResult } from "../../types";
-import "./Results.css";
+import React from "react"
+import { SearchResult } from "../../types"
+import "./Results.css"
 
 interface ResultsProps {
-  items: SearchResult[];
+  items: SearchResult[]
+  onItemClick: (id: number) => void
 }
 
-class Results extends Component<ResultsProps> {
-  render() {
-    const { items } = this.props;
-    return (
-      <div className="results">
-        {items.map((item) => (
-          <div key={item.id} className="fullCard">
-            <h3>{item.name}</h3>
-            <p>{item.status}</p>
-            <p>{item.gender}</p>
-            <img src={item.image} className="resultImage"></img>
-          </div>
-        ))}
-      </div>
-    );
-  }
+const Results: React.FC<ResultsProps> = ({ items, onItemClick }) => {
+  return (
+    <div className="results">
+      {items.map((item) => (
+        <div
+          key={item.id}
+          className="fullCard"
+          onClick={() => onItemClick(item.id)}
+        >
+          <h3 className="charName">{item.name}</h3>
+          <img src={item.image} className="resultImage"></img>
+        </div>
+      ))}
+    </div>
+  )
 }
 
-export default Results;
+export default Results
