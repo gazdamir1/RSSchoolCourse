@@ -1,0 +1,39 @@
+.box{
+display: flex;
+width: 100vw;
+height: 100vh;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+font-size: 30px;
+gap: 2vw;
+}
+
+
+.errorButton{
+    background: linear-gradient(45deg, #ff6b6b, #f06595, #cc65d1, #6a4c93);
+    background-size: 400% 400%;
+    animation: gradient 5s ease infinite;
+    border: none;
+    color: white;
+    padding: 15px 30px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+
+.errorButton:hover {
+    transform: scale(1.05);
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
