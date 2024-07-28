@@ -1,10 +1,12 @@
 import { render, screen, waitFor } from "@testing-library/react"
+import { describe, it, expect, vi, beforeEach } from "vitest"
 import { MemoryRouter, Route, Routes } from "react-router-dom"
-import { describe, it, vi, beforeEach } from "vitest"
 import Details from "./Details"
-import { SearchResult } from "../../types"
+import { characterAPI } from "../../services/CharacterService"
+import { ICharacter } from "../../types"
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query/react"
 
-const mockCharacter: SearchResult = {
+const mockCharacter: ICharacter = {
   id: 1,
   name: "Rick Sanchez",
   status: "Alive",
@@ -15,41 +17,50 @@ const mockCharacter: SearchResult = {
   image: "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
 }
 
-const mockFetch = () => {
-  return Promise.resolve({
-    ok: true,
-    status: 200,
-    statusText: "OK",
-    headers: new Headers(),
-    redirected: false,
-    type: "basic",
-    url: "",
-    clone: () => this as unknown as Response,
-    body: null,
-    bodyUsed: false,
-    arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
-    blob: () => Promise.resolve(new Blob()),
-    formData: () => Promise.resolve(new FormData()),
-    json: () => Promise.resolve(mockCharacter),
-    text: () => Promise.resolve(""),
-  } as unknown as Response)
-}
+const mockFetchCharacterDetailsQuery = vi.spyOn(
+  characterAPI,
+  "useFetchCharacterDetailsQuery"
+)
 
 describe("Details Component", () => {
   beforeEach(() => {
-    vi.spyOn(global, "fetch").mockImplementation(mockFetch)
+    mockFetchCharacterDetailsQuery.mockReturnValue({
+      data: mockCharacter,
+      error: null,
+      isLoading: false,
+      isFetching: false,
+      refetch: vi.fn(),
+    })
   })
 
-  it("renders the relevant card data", async () => {
+  it("should display a loading indicator while fetching data", () => {
+    mockFetchCharacterDetailsQuery.mockReturnValueOnce({
+      data: null,
+      error: null,
+      isLoading: true,
+      isFetching: true,
+      refetch: vi.fn(),
+    })
+
     render(
-      <MemoryRouter initialEntries={["/character/1"]}>
+      <MemoryRouter initialEntries={["/details/1"]}>
         <Routes>
-          <Route path="/character/:id" element={<Details />} />
+          <Route path="/details/:id" element={<Details />} />
         </Routes>
       </MemoryRouter>
     )
 
-    expect(screen.getByAltText(/Loading.../i)).toBeInTheDocument()
+    expect(screen.getByTestId("Loader")).toBeInTheDocument()
+  })
+
+  it("should correctly display the detailed card data", async () => {
+    render(
+      <MemoryRouter initialEntries={["/details/1"]}>
+        <Routes>
+          <Route path="/details/:id" element={<Details />} />
+        </Routes>
+      </MemoryRouter>
+    )
 
     await waitFor(() =>
       expect(screen.getByText("Rick Sanchez")).toBeInTheDocument()
@@ -58,5 +69,47 @@ describe("Details Component", () => {
     expect(screen.getByText(/Species:/i)).toHaveTextContent("Species: Human")
     expect(screen.getByText(/Gender:/i)).toHaveTextContent("Gender: Male")
     expect(screen.getByAltText("Rick Sanchez")).toBeInTheDocument()
+  })
+
+  it("should display an error message if there is an error", async () => {
+    mockFetchCharacterDetailsQuery.mockReturnValueOnce({
+      data: null,
+      error: true as unknown as FetchBaseQueryError,
+      isLoading: false,
+      isFetching: false,
+      refetch: vi.fn(),
+    })
+
+    render(
+      <MemoryRouter initialEntries={["/details/1"]}>
+        <Routes>
+          <Route path="/details/:id" element={<Details />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    await waitFor(() =>
+      expect(screen.getByText("Loading error")).toBeInTheDocument()
+    )
+  })
+
+  it("should display a message if there is no data", async () => {
+    mockFetchCharacterDetailsQuery.mockReturnValueOnce({
+      data: null,
+      error: null,
+      isLoading: false,
+      isFetching: false,
+      refetch: vi.fn(),
+    })
+
+    render(
+      <MemoryRouter initialEntries={["/details/1"]}>
+        <Routes>
+          <Route path="/details/:id" element={<Details />} />
+        </Routes>
+      </MemoryRouter>
+    )
+
+    await waitFor(() => expect(screen.getByText("No data")).toBeInTheDocument())
   })
 })

@@ -17,7 +17,12 @@
   }
   
   .link {
-    background-color: var(--bg-component-color);
+    background-color: var(--component-color);
+  }
+
+  .link:hover,
+  .arrow-link:hover{
+    scale: 1.075;
   }
   
   .activeLink {
@@ -25,14 +30,14 @@
   }
   
   .arrow-link {
-    background-color: var(--bg-component-color);
+    background-color: var(--component-color);
   }
-  
+
   .dots {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 30px;
     height: 30px;
-    color: var(--bg-component-color);
+    color: var(--component-color);
   }

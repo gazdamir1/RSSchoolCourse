@@ -1,6 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
 import useSearchQuery from "../hooks/useSearchQuery"
-import { SearchResult } from "../types"
 import SearchBar from "../components/SearchBar/SearchBar"
 import Loader from "../components/Loader/Loader"
 import Results from "../components/Results/Results"
@@ -8,57 +6,31 @@ import Pagination from "../components/Pagination/Pagination" // Компонен
 import "./Main.css"
 import { Outlet, useNavigate } from "react-router-dom"
 import useQuery from "../hooks/useQuery"
+import { characterAPI } from "../services/CharacterService"
+import FlyoutBar from "../components/FlyoutBar/FlyoutBar"
+import ThemeSwitcher from "../components/theme-provider/ThemeSwitcher"
+import { useTheme } from "../hooks/useTheme"
 
 const Main = () => {
   const [searchTerm, setSearchTerm] = useSearchQuery("searchTerm", "")
-  const [results, setResults] = useState<SearchResult[]>([])
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const query = useQuery()
   const currentPage = parseInt(query.get("page") || "1", 10)
-  const [totalPages, setTotalPages] = useState<number>(1)
   const detailsId = query.get("details")
+  const { data, error, isLoading } = characterAPI.useSearchCharactersQuery({
+    name: searchTerm,
+    page: currentPage,
+  })
 
-  const fetchResults = useCallback(async (searchTerm: string, page: number) => {
-    const trimmedTerm = searchTerm.trim()
-    setLoading(true)
-    setError(null)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    const apiEndpoint = `https://rickandmortyapi.com/api/character/?name=${trimmedTerm}&page=${page}`
-
-    try {
-      const response = await fetch(apiEndpoint)
-      const data = await response.json()
-      setResults(data.results as SearchResult[])
-      setTotalPages(data.info.pages)
-      setLoading(false)
-    } catch (error) {
-      setError("Failed to fetch")
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchResults(searchTerm, currentPage)
-  }, [searchTerm, currentPage, fetchResults])
+  const { theme } = useTheme()
 
   const handleSearch = (searchTerm: string) => {
     setSearchTerm(searchTerm)
     navigate(`/?page=1`)
-    fetchResults(searchTerm, 1)
-  }
-
-  const throwError = () => {
-    fetchResults("Morti", currentPage)
   }
 
   const onPageChange = (newPage: number) => {
     navigate(`/search/${newPage}`)
-  }
-
-  const handleCloseDetails = () => {
-    navigate(`?page=${currentPage}`)
   }
 
   const handleItemClick = (id: number) => {
@@ -66,38 +38,41 @@ const Main = () => {
   }
 
   return (
-    <div className="main">
-      <div className="searchSection">
-        <SearchBar searchTerm={searchTerm} onSearch={handleSearch} />
-        <button onClick={throwError}>Throw Error</button>
-      </div>
+    <div className={`container ${theme}`}>
+      <div className="main">
+        <div className="searchSection">
+          <SearchBar searchTerm={searchTerm} onSearch={handleSearch} />
+          <ThemeSwitcher />
+        </div>
 
-      <div className="contentArea">
-        <div
-          className="resultsSection"
-          onClick={detailsId ? handleCloseDetails : () => {}}
-        >
-          {loading ? (
-            <Loader />
+        <div className="contentArea">
+          <div className="resultsSection">
+            {isLoading && <Loader />}
+            {error && <div className="errorLoading">Error Loading</div>}
+
+            {!error && !isLoading && data && data.results.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={data?.info.pages}
+                onPageChange={onPageChange}
+              />
+            )}
+
+            {!error && !isLoading && data && (
+              <>
+                <Results items={data.results} onItemClick={handleItemClick} />
+                <FlyoutBar />
+              </>
+            )}
+          </div>
+          {detailsId ? (
+            <div className="detailsArea">
+              <Outlet />
+            </div>
           ) : (
-            <Results items={results} onItemClick={handleItemClick} />
-          )}
-          {error && <div>Error: {error}</div>}
-          {!loading && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={onPageChange}
-            />
+            <></>
           )}
         </div>
-        {detailsId ? (
-          <div className="detailsArea">
-            <Outlet />
-          </div>
-        ) : (
-          <></>
-        )}
       </div>
     </div>
   )

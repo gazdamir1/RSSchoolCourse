@@ -4,7 +4,7 @@ import loader from "../../assets/loader.svg"
 
 const Loader: React.FC = () => {
   return (
-    <div className="loaderWrapper">
+    <div data-testid="Loader" className="loaderWrapper">
       <img src={loader} className="loader" alt="Loading..." />
     </div>
   )

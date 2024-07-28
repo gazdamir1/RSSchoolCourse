@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { useState } from "react"
 import "./SearchBar.css"
 
 interface SearchBarProps {
@@ -6,36 +6,30 @@ interface SearchBarProps {
   onSearch: (searchTerm: string) => void
 }
 
-interface SearchBarState {
-  searchTerm: string
-}
+const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, onSearch }) => {
+  const [searchTermState, setSearchTermState] = useState<string>(searchTerm)
 
-class SearchBar extends Component<SearchBarProps, SearchBarState> {
-  state: SearchBarState = {
-    searchTerm: this.props.searchTerm,
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTermState(event.target.value)
   }
 
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ searchTerm: event.target.value })
+  const handleSearch = () => {
+    onSearch(searchTermState)
   }
 
-  handleSearch = () => {
-    this.props.onSearch(this.state.searchTerm)
-  }
-
-  render() {
-    return (
-      <div className="search-bar">
-        <input
-          className="search-input"
-          type="text"
-          value={this.state.searchTerm}
-          onChange={this.handleChange}
-        />
-        <button onClick={this.handleSearch}>Search</button>
-      </div>
-    )
-  }
+  return (
+    <div className="search-bar">
+      <input
+        className="search-input"
+        type="text"
+        value={searchTermState}
+        onChange={handleChange}
+      />
+      <button onClick={handleSearch} className="searchButton">
+        Search
+      </button>
+    </div>
+  )
 }
 
 export default SearchBar

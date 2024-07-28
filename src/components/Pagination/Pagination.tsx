@@ -49,7 +49,13 @@ const Pagination: React.FC<PaginationProps> = ({
           key={page}
           to={`/?page=${page}`}
           className={page === currentPage ? "activeLink" : "link"}
-          onClick={() => onPageChange(page)} // Добавлен вызов onPageChange
+          onClick={(event) => {
+            if (page === currentPage) {
+              event.preventDefault()
+            } else {
+              onPageChange(page)
+            }
+          }}
         >
           {page}
         </Link>

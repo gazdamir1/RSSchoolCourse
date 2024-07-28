@@ -1,12 +1,19 @@
+.container{
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .main{
     display: flex;
     flex-direction: column;
     width: 100vw;
-    height: 100vh;
   }
   
   .searchSection{
-    background-color:rgb(109, 201, 78);
+    background-color: var(--component-color);
     display: flex;
     justify-content: center;
     padding-inline: 100px;
@@ -32,8 +39,13 @@
   .detailsArea{
     display: flex;
     flex: 0.5;
+    width: 20%;
     margin-top: 20px;
     padding-left: 30px;
     border-radius: 8px;
-    background-color: var(--bg-component-color);
+    background-color: var(--component-color);
+  }
+
+  .Loader{
+    background-color: white;
   }

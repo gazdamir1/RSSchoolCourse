@@ -7,7 +7,7 @@
 }
 
 .fullCard{
-    background-color: rgb(109, 201, 78);
+    background-color: var(--component-color);
     padding: 10px;
     border-radius: 8px;
     width: 200px;
@@ -27,4 +27,28 @@
     justify-content: center;
     align-items: center;
     height: 56px;
+    font-size: 15px;
+    font-weight: 500;
+    hyphens: auto;
 }
+
+.resultCardInterface{
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.resultCardCheckbox{
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+}
+
+.resultCardOpenDetailsButton{
+    display: flex;
+    font-size: 14px;
+    padding: 2px 5px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+

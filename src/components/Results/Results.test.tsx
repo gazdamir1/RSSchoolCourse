@@ -1,9 +1,13 @@
 import { render, screen, fireEvent } from "@testing-library/react"
 import Results from "./Results"
-import { SearchResult } from "../../types"
-import { describe, it, expect, vi } from "vitest"
+import { describe, it, expect, beforeEach, vi } from "vitest"
+import { ICharacter } from "../../types"
+import { Provider } from "react-redux"
+import { configureStore, EnhancedStore } from "@reduxjs/toolkit"
+import selectedCharactersReducer from "../../store/reducers/SelectedCharacterSlice"
+import { characterAPI } from "../../services/CharacterService"
 
-const mockResults: SearchResult[] = [
+const mockResults: ICharacter[] = [
   {
     id: 1,
     name: "Rick Sanchez",
@@ -26,36 +30,89 @@ const mockResults: SearchResult[] = [
   },
 ]
 
+const renderWithProviders = (
+  ui: React.ReactElement,
+  { store }: { store: EnhancedStore }
+) => {
+  return render(<Provider store={store}>{ui}</Provider>)
+}
+
 describe("Results component", () => {
+  let store: EnhancedStore
+
+  beforeEach(() => {
+    store = configureStore({
+      reducer: {
+        [characterAPI.reducerPath]: characterAPI.reducer,
+        selectedItems: selectedCharactersReducer,
+      },
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(characterAPI.middleware),
+    })
+  })
+
   it("renders the specified number of cards", () => {
-    render(<Results items={mockResults} onItemClick={() => {}} />)
+    renderWithProviders(
+      <Results items={mockResults} onItemClick={() => {}} />,
+      { store }
+    )
 
     const cards = screen.getAllByRole("heading", { name: /./i })
     expect(cards).toHaveLength(mockResults.length)
   })
 
   it("displays an appropriate message if no cards are present", () => {
-    render(<Results items={[]} onItemClick={() => {}} />)
+    renderWithProviders(<Results items={[]} onItemClick={() => {}} />, {
+      store,
+    })
 
     expect(screen.getByText("No results found")).toBeInTheDocument()
   })
 
   it("renders the relevant card data", () => {
-    render(<Results items={mockResults} onItemClick={() => {}} />)
+    renderWithProviders(
+      <Results items={mockResults} onItemClick={() => {}} />,
+      { store }
+    )
 
     mockResults.forEach((result) => {
       expect(screen.getByText(result.name)).toBeInTheDocument()
     })
   })
 
-  it("opens a detailed card component when a card is clicked", () => {
+  it("calls onItemClick with the correct id when the Open Details button is clicked", () => {
     const handleItemClick = vi.fn()
 
-    render(<Results items={mockResults} onItemClick={handleItemClick} />)
+    renderWithProviders(
+      <Results items={mockResults} onItemClick={handleItemClick} />,
+      { store }
+    )
 
-    const firstCard = screen.getByText(mockResults[0].name)
-    fireEvent.click(firstCard)
+    const openDetailsButtons = screen.getAllByText("Open Details")
+    fireEvent.click(openDetailsButtons[0])
 
     expect(handleItemClick).toHaveBeenCalledWith(mockResults[0].id)
+  })
+
+  it("toggles character selection when checkbox is clicked", () => {
+    renderWithProviders(
+      <Results items={mockResults} onItemClick={() => {}} />,
+      { store }
+    )
+
+    const checkboxes = screen.getAllByRole("checkbox")
+
+    // Initially unselected
+    expect(checkboxes[0]).not.toBeChecked()
+    fireEvent.click(checkboxes[0])
+    expect(store.getState().selectedItems.selectedCharacters).toContainEqual(
+      mockResults[0]
+    )
+
+    // Simulate selection state
+    fireEvent.click(checkboxes[0])
+    expect(
+      store.getState().selectedItems.selectedCharacters
+    ).not.toContainEqual(mockResults[0])
   })
 })

@@ -1,40 +1,19 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import Loader from "../Loader/Loader"
 import "./Details.css"
-import { SearchResult } from "../../types"
 import useQuery from "../../hooks/useQuery"
+import { characterAPI } from "../../services/CharacterService"
 
 const Details: React.FC = () => {
   const { id } = useParams<{ id: string }>()
-  const [loading, setLoading] = useState(true)
-  const [details, setDetails] = useState<SearchResult>()
+  const { data, error, isLoading } = characterAPI.useFetchCharacterDetailsQuery(
+    { id: id }
+  )
+
   const query = useQuery()
   const navigate = useNavigate()
   const currentPage = parseInt(query.get("page") || "1", 10)
-
-  useEffect(() => {
-    const fetchDetails = async () => {
-      setLoading(true)
-      try {
-        const response = await fetch(
-          `https://rickandmortyapi.com/api/character/${id}`
-        )
-        const data = await response.json()
-        setDetails(data)
-      } catch (error) {
-        console.error("Failed to fetch details:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchDetails()
-  }, [id])
-
-  if (loading) {
-    return <Loader />
-  }
 
   const handleCloseDetails = () => {
     navigate(`/?page=${currentPage}`)
@@ -42,7 +21,11 @@ const Details: React.FC = () => {
 
   return (
     <>
-      {details ? (
+      {isLoading ? (
+        <Loader />
+      ) : error ? (
+        <h1>Loading error</h1>
+      ) : data ? (
         <div className="details">
           <button
             title="CloseBut"
@@ -51,26 +34,26 @@ const Details: React.FC = () => {
           >
             Close Details
           </button>
-          <div className="detailsTitle">{details.name}</div>
+          <div className="detailsTitle">{data.name}</div>
           <div>
-            Status: <b>{details.status}</b>{" "}
+            Status: <b>{data.status}</b>{" "}
           </div>
           <div>
-            Species: <b>{details.species}</b>
+            Species: <b>{data.species}</b>
           </div>
           <div>
-            Type: <b>{details.type}</b>
+            Type: <b>{data.type}</b>
           </div>
           <div>
-            Gender: <b>{details.gender}</b>
+            Gender: <b>{data.gender}</b>
           </div>
           <div>
-            Created: <b>{details.created}</b>
+            Created: <b>{data.created}</b>
           </div>
-          <img src={details.image} alt={details.name} />
+          <img src={data.image} alt={data.name} />
         </div>
       ) : (
-        <p>No details found</p>
+        <h1>No data</h1>
       )}
     </>
   )

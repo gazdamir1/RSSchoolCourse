@@ -20,7 +20,6 @@ export default mergeConfig(
           "src/vite-env.d.ts",
           "src/App.tsx",
           "src/pages/Main.tsx",
-          "src/components/ErrorBoundary.tsx",
           "src/pages/NotFoundPage/NotFoundPage.tsx",
           "src/vite-env.d.ts",
         ],
