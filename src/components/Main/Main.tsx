@@ -34,7 +34,7 @@ const MainPage: React.FC<MainProps> = ({ children }) => {
   }
 
   const onPageChange = (newPage: number) => {
-    router.push(`/search/${newPage}`)
+    router.push(`/?page=${newPage}`)
   }
 
   const handleItemClick = (id: number) => {
