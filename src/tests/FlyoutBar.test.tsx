@@ -18,7 +18,6 @@ describe("FlyoutBar Component", () => {
   }
 
   beforeEach(() => {
-    // Мокаем URL.createObjectURL перед каждым тестом
     global.URL.createObjectURL = vi.fn(() => "mockedObjectURL")
 
     store = configureStore({
@@ -31,7 +30,7 @@ describe("FlyoutBar Component", () => {
   })
 
   afterEach(() => {
-    vi.resetAllMocks() // Сбрасываем моки после каждого теста
+    vi.resetAllMocks()
   })
 
   it("renders nothing when no characters are selected", () => {

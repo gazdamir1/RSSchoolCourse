@@ -5,7 +5,6 @@ import { describe, it, expect, vi } from "vitest"
 import { characterAPI } from "../services/CharacterService"
 import { ApiResponse, ICharacter } from "../types"
 
-// Mock data
 const mockCharacters: ApiResponse = {
   info: {
     count: 1,
@@ -38,7 +37,6 @@ const mockCharacter: ICharacter = {
   created: "2021-01-01",
 }
 
-// Mock fetch
 global.fetch = vi.fn((input) => {
   const url = typeof input === "string" ? input : input.url
 
@@ -63,7 +61,6 @@ global.fetch = vi.fn((input) => {
   return Promise.reject(new Error("Not Found"))
 }) as unknown as typeof fetch
 
-// Configure store
 const store = configureStore({
   reducer: {
     [characterAPI.reducerPath]: characterAPI.reducer,

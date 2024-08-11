@@ -22,14 +22,12 @@ describe("useTheme", () => {
   }
 
   it("should return the theme context value when used within a ThemeProvider", () => {
-    // Render hook within the ThemeProvider
     const { result } = renderHook(() => useTheme(), {
       wrapper: ({ children }) => (
         <ThemeProvider value={themeContextValue}>{children}</ThemeProvider>
       ),
     })
 
-    // Check the values returned by the hook
     expect(result.current).toBe(themeContextValue)
     expect(result.current.theme).toBe("light")
     expect(result.current.toggleTheme).toBeInstanceOf(Function)

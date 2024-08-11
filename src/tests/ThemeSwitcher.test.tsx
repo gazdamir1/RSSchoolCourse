@@ -21,10 +21,9 @@ describe("ThemeSwitcher Component", () => {
 
     render(<ThemeSwitcher />)
 
-    // Используем id для поиска checkbox
-    const checkbox = screen.getByRole("checkbox", { name: "" }) // Пустое имя, так как aria-label отсутствует
+    const checkbox = screen.getByRole("checkbox", { name: "" })
     expect(checkbox).toBeInTheDocument()
-    expect(checkbox).not.toBeChecked() // Light theme should not be checked
+    expect(checkbox).not.toBeChecked()
 
     const themeText = screen.getByText("Theme")
     expect(themeText).toBeInTheDocument()
@@ -38,10 +37,9 @@ describe("ThemeSwitcher Component", () => {
 
     render(<ThemeSwitcher />)
 
-    // Используем id для поиска checkbox
-    const checkbox = screen.getByRole("checkbox", { name: "" }) // Пустое имя, так как aria-label отсутствует
+    const checkbox = screen.getByRole("checkbox", { name: "" })
     expect(checkbox).toBeInTheDocument()
-    expect(checkbox).toBeChecked() // Dark theme should be checked
+    expect(checkbox).toBeChecked()
 
     const themeText = screen.getByText("Theme")
     expect(themeText).toBeInTheDocument()

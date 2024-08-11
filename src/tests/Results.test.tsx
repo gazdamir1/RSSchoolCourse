@@ -102,14 +102,12 @@ describe("Results component", () => {
 
     const checkboxes = screen.getAllByRole("checkbox")
 
-    // Initially unselected
     expect(checkboxes[0]).not.toBeChecked()
     fireEvent.click(checkboxes[0])
     expect(store.getState().selectedItems.selectedCharacters).toContainEqual(
       mockResults[0]
     )
 
-    // Simulate selection state
     fireEvent.click(checkboxes[0])
     expect(
       store.getState().selectedItems.selectedCharacters

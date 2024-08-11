@@ -1,4 +1,3 @@
-// src/tests/Details.test.tsx
 import React from "react"
 import { render, screen } from "@testing-library/react"
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest"
@@ -16,19 +15,16 @@ vi.mock("next/router", () => ({
   }),
 }))
 
-// Мок функции useNavigate
 const mockNavigate = vi.fn()
 vi.mock("react-router-dom", () => ({
   ...vi.importActual("react-router-dom"),
   useNavigate: () => mockNavigate,
 }))
 
-// Подключаем моки роутера
 vi.mock("next/router", () => ({
   useRouter: () => mockRouter,
 }))
 
-// Подключаем моки CharacterService
 vi.mock("../../services/CharacterService", () => ({
   characterAPI: {
     useFetchCharacterDetailsQuery: mockUseFetchCharacterDetailsQuery,
