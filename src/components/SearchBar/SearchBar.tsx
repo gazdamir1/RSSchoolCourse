@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import "./SearchBar.css"
+import React, { useState, useEffect } from "react"
+import styles from "./SearchBar.module.css"
 
 interface SearchBarProps {
   searchTerm: string
@@ -9,6 +9,10 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, onSearch }) => {
   const [searchTermState, setSearchTermState] = useState<string>(searchTerm)
 
+  useEffect(() => {
+    setSearchTermState(searchTerm)
+  }, [searchTerm])
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTermState(event.target.value)
   }
@@ -17,15 +21,23 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, onSearch }) => {
     onSearch(searchTermState)
   }
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch()
+    }
+  }
+
   return (
-    <div className="search-bar">
+    <div className={styles.searchBar}>
       <input
-        className="search-input"
+        className={styles.searchInput}
         type="text"
         value={searchTermState}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        placeholder="Search..."
       />
-      <button onClick={handleSearch} className="searchButton">
+      <button onClick={handleSearch} className={styles.searchButton}>
         Search
       </button>
     </div>

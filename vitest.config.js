@@ -18,10 +18,9 @@ export default mergeConfig(
           "src/**/*.d.ts",
           "src/index.tsx",
           "src/vite-env.d.ts",
-          "src/App.tsx",
-          "src/pages/Main.tsx",
-          "src/pages/NotFoundPage/NotFoundPage.tsx",
-          "src/vite-env.d.ts",
+          "src/components/Main/Main.tsx",
+          "src/pages/**.tsx",
+          "src/store/reducers/ResultSlice.ts",
         ],
 
         statements: 80,

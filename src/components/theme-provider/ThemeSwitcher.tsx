@@ -1,20 +1,20 @@
 import { useTheme } from "../../hooks/useTheme"
-import "./ThemeSwitcher.css"
+import styles from "./ThemeSwitcher.module.css"
 
 const ThemeSwitcher = () => {
   const { theme, toggleTheme } = useTheme()
 
   return (
-    <div className="toggle-switch">
+    <div className={styles.toggleSwitch}>
       <input
         type="checkbox"
         id="toggle"
-        className="toggle-input"
+        className={styles.toggleInput}
         checked={theme === "dark"}
         onChange={toggleTheme}
       />
-      <label htmlFor="toggle" className="toggle-label"></label>
-      <div className="themeText">Theme</div>
+      <label htmlFor="toggle" className={styles.toggleLabel}></label>
+      <div className={styles.themeText}>Theme</div>
     </div>
   )
 }

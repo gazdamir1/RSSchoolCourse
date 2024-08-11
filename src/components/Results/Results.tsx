@@ -1,6 +1,6 @@
 import React from "react"
 import { ICharacter } from "../../types"
-import "./Results.css"
+import styles from "./Results.module.css"
 import { useDispatch } from "react-redux"
 import { useAppSelector } from "../../hooks/redux"
 import {
@@ -30,30 +30,30 @@ const Results: React.FC<ResultsProps> = ({ items, onItemClick }) => {
   }
 
   return (
-    <div className="results">
+    <div className={styles.results}>
       {items.length === 0 ? (
         <div>No results found</div>
       ) : (
         items.map((item) => (
-          <div key={item.id} className="fullCard">
-            <div className="resultCardInterface">
+          <div key={item.id} className={styles.fullCard}>
+            <div className={styles.resultCardInterface}>
               <input
-                className="resultCardCheckbox"
+                className={styles.resultCardCheckbox}
                 type="checkbox"
                 checked={isSelected(item.id)}
                 onChange={() => handleSelectToggle(item)}
               />
 
               <button
-                className="resultCardOpenDetailsButton"
+                className={styles.resultCardOpenDetailsButton}
                 onClick={() => onItemClick(item.id)}
               >
                 Open Details
               </button>
             </div>
 
-            <h3 className="charName">{item.name}</h3>
-            <img src={item.image} className="resultImage" />
+            <h3 className={styles.charName}>{item.name}</h3>
+            <img src={item.image} className={styles.resultImage} />
           </div>
         ))
       )}

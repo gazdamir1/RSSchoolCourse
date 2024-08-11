@@ -1,22 +1,22 @@
 import React from "react"
-import { useNavigate, useParams } from "react-router-dom"
 import Loader from "../Loader/Loader"
-import "./Details.css"
-import useQuery from "../../hooks/useQuery"
+import styles from "./Details.module.css"
 import { characterAPI } from "../../services/CharacterService"
+import { useRouter } from "next/router"
 
 const Details: React.FC = () => {
-  const { id } = useParams<{ id: string }>()
+  const router = useRouter()
+  const { id } = router.query
   const { data, error, isLoading } = characterAPI.useFetchCharacterDetailsQuery(
-    { id: id }
+    { id: id as string }
   )
 
-  const query = useQuery()
-  const navigate = useNavigate()
-  const currentPage = parseInt(query.get("page") || "1", 10)
+  const { query } = useRouter()
+
+  const currentPage = parseInt((query.page as string) || "1", 10)
 
   const handleCloseDetails = () => {
-    navigate(`/?page=${currentPage}`)
+    router.push(`/?page=${currentPage}`)
   }
 
   return (
@@ -26,15 +26,15 @@ const Details: React.FC = () => {
       ) : error ? (
         <h1>Loading error</h1>
       ) : data ? (
-        <div className="details">
+        <div className={styles.details}>
           <button
             title="CloseBut"
-            className="closeDetails"
+            className={styles.closeDetails}
             onClick={handleCloseDetails}
           >
             Close Details
           </button>
-          <div className="detailsTitle">{data.name}</div>
+          <div className={styles.detailsTitle}>{data.name}</div>
           <div>
             Status: <b>{data.status}</b>{" "}
           </div>

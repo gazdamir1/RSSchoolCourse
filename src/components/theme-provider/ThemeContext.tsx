@@ -14,14 +14,24 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setTheme] = useState<string>(() => {
-    return localStorage.getItem("theme") || "light"
-  })
+  const [theme, setTheme] = useState<string>("light")
+  const isClient = typeof window !== "undefined"
 
   useEffect(() => {
-    localStorage.setItem("theme", theme)
-    document.documentElement.setAttribute("data-theme", theme)
-  }, [theme])
+    if (isClient) {
+      const savedTheme = localStorage.getItem("theme")
+      if (savedTheme) {
+        setTheme(savedTheme)
+      }
+    }
+  }, [isClient])
+
+  useEffect(() => {
+    if (isClient) {
+      localStorage.setItem("theme", theme)
+      document.documentElement.setAttribute("data-theme", theme)
+    }
+  }, [theme, isClient])
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"))

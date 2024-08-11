@@ -1,6 +1,6 @@
 import React from "react"
-import { Link } from "react-router-dom"
-import "./Pagination.css"
+import styles from "./Pagination.module.css"
+import Link from "next/link"
 
 interface PaginationProps {
   currentPage: number
@@ -15,7 +15,6 @@ const Pagination: React.FC<PaginationProps> = ({
 }) => {
   const MAX_PAGES = 5
   const pages = []
-
   let startPage = Math.max(1, currentPage - Math.floor(MAX_PAGES / 2))
   const endPage = Math.min(totalPages, startPage + MAX_PAGES - 1)
 
@@ -28,27 +27,27 @@ const Pagination: React.FC<PaginationProps> = ({
   }
 
   return (
-    <div className="pagination">
+    <div className={styles.pagination}>
       {currentPage > 1 && (
-        <Link to={`/?page=${currentPage - 1}`} className="arrow-link">
+        <Link href={`/?page=${currentPage - 1}`} className={styles.arrowLink}>
           {"<"}
         </Link>
       )}
 
       {startPage > 1 && (
         <>
-          <Link to={`/?page=1`} className="link">
+          <Link href={`/?page=1`} className={styles.link}>
             1
           </Link>
-          {startPage > 2 && <span className="dots">...</span>}
+          {startPage > 2 && <span className={styles.dots}>...</span>}
         </>
       )}
 
       {pages.map((page) => (
         <Link
           key={page}
-          to={`/?page=${page}`}
-          className={page === currentPage ? "activeLink" : "link"}
+          href={`/?page=${page}`}
+          className={page === currentPage ? styles.activeLink : styles.link}
           onClick={(event) => {
             if (page === currentPage) {
               event.preventDefault()
@@ -63,15 +62,15 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {endPage < totalPages && (
         <>
-          {endPage < totalPages - 1 && <span className="dots">...</span>}
-          <Link to={`/?page=${totalPages}`} className="link">
+          {endPage < totalPages - 1 && <span className={styles.dots}>...</span>}
+          <Link href={`/?page=${totalPages}`} className={styles.link}>
             {totalPages}
           </Link>
         </>
       )}
 
       {currentPage < totalPages && (
-        <Link to={`/?page=${currentPage + 1}`} className="arrow-link">
+        <Link href={`/?page=${currentPage + 1}`} className={styles.arrowLink}>
           {">"}
         </Link>
       )}

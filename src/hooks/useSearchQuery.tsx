@@ -1,18 +1,27 @@
-import { useState, useEffect } from "react";
+"use client"
+
+import { useState, useEffect } from "react"
 
 const useSearchQuery = (key: string, initialValue: string) => {
-  const [value, setValue] = useState(() => {
-    const saved = localStorage.getItem(key);
-    return saved !== null ? saved : initialValue;
-  });
+  const [value, setValue] = useState<string>(initialValue)
+  const isClient = typeof window !== "undefined"
 
   useEffect(() => {
-    return () => {
-      localStorage.setItem(key, value);
-    };
-  }, [key, value]);
+    if (isClient) {
+      const saved = localStorage.getItem(key)
+      if (saved !== null) {
+        setValue(saved)
+      }
+    }
+  }, [isClient, key])
 
-  return [value, setValue] as const;
-};
+  useEffect(() => {
+    if (isClient) {
+      localStorage.setItem(key, value)
+    }
+  }, [isClient, key, value])
 
-export default useSearchQuery;
+  return [value, setValue] as const
+}
+
+export default useSearchQuery
