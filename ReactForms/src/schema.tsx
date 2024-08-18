@@ -29,7 +29,6 @@ const validationSchema = Yup.object().shape({
     .positive('Age must be a positive number')
     .required('Age is required'),
   email: Yup.string()
-    .email('Invalid email address')
     .required('Email is required')
     .matches(/@/, 'You should use ..@..'),
   password: Yup.string()
