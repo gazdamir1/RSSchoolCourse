@@ -82,7 +82,7 @@ const HookForm: React.FC = () => {
 
   return (
     <div className={styles.form}>
-      <h2>Custom Form</h2>
+      <h2>Hook Form</h2>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
         <input
           className={styles.input}
