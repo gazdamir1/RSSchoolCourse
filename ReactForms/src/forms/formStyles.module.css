@@ -1,0 +1,35 @@
+.form{
+    min-height: 300px;
+    min-width: 300px;
+    max-height: 1000px;
+    color: var(--component-color);
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+    gap: 10px;
+    background-color: var(--bg-color);
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.input{
+    border-radius: 5px;
+    padding: 5px;
+    padding-left: 10px;
+}
+
+.submitButton{
+    background-color: white;
+    color: black;
+    cursor: pointer;
+}
+
+.submitButton:disabled {
+    background-color: #2b2b2b;
+    color: #4a4a4a;
+    cursor: not-allowed;
+  }
+
+  .strengthIndicator {
+    font-weight: bold;
+  }
